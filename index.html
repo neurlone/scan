@@ -1,0 +1,2315 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>یک آزمایش کوچک ✨</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+html,body{
+    margin:0;
+    width:100%;
+    min-height:100%;
+    background:#05050b;
+    color:white;
+    font-family:
+        Tahoma,
+        "Segoe UI",
+        sans-serif;
+}
+
+body{
+    overflow-x:hidden;
+}
+
+canvas{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    z-index:100;
+}
+
+.page{
+    position:relative;
+    z-index:2;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px 18px;
+}
+
+.screen{
+    width:min(460px,100%);
+    text-align:center;
+    animation:appear .8s ease;
+}
+
+.hidden{
+    display:none!important;
+}
+
+.small{
+    font-size:12px;
+    opacity:.55;
+    letter-spacing:1px;
+}
+
+h1{
+    margin:15px 0;
+    font-size:clamp(25px,7vw,38px);
+    font-weight:500;
+}
+
+.subtitle{
+    color:#cfcfe8;
+    font-size:15px;
+    line-height:2;
+}
+
+button{
+    border:none;
+    outline:none;
+    cursor:pointer;
+    font-family:inherit;
+}
+
+
+/* =========================
+       دکمه‌ها
+========================= */
+
+.start-btn,
+.scan-start-btn{
+
+    margin-top:28px;
+
+    padding:14px 32px;
+
+    border-radius:100px;
+
+    color:white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff3cac,
+            #784ba0
+        );
+
+    box-shadow:
+        0 0 30px
+        rgba(255,60,172,.3);
+
+    transition:.3s;
+}
+
+.start-btn:hover,
+.scan-start-btn:hover{
+
+    transform:scale(1.06);
+
+    box-shadow:
+        0 0 50px
+        rgba(255,60,172,.5);
+}
+
+
+/* =========================
+          گالری
+========================= */
+
+.gallery-intro{
+
+    margin-top:22px;
+
+    font-size:18px;
+
+    line-height:2;
+
+    color:#e8e8f5;
+}
+
+.gallery{
+
+    position:relative;
+
+    width:100%;
+    height:390px;
+
+    margin-top:25px;
+
+    overflow:hidden;
+
+    border-radius:28px;
+
+    background:#090911;
+
+    box-shadow:
+        0 25px 80px
+        rgba(0,0,0,.55);
+}
+
+.gallery img{
+
+    position:absolute;
+
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    opacity:0;
+
+    transform:scale(1.08);
+
+    transition:
+        opacity 1.2s ease,
+        transform 5s ease;
+}
+
+.gallery img.active{
+
+    opacity:1;
+
+    transform:scale(1);
+}
+
+.image-overlay{
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(0,0,0,.82),
+            rgba(0,0,0,.05) 70%
+        );
+}
+
+.gallery-text{
+
+    position:absolute;
+
+    bottom:25px;
+
+    left:20px;
+    right:20px;
+
+    z-index:5;
+
+    font-size:15px;
+
+    line-height:1.9;
+
+    transition:opacity .45s ease;
+}
+
+.dots{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:7px;
+
+    margin-top:15px;
+}
+
+.dot{
+
+    width:6px;
+    height:6px;
+
+    border-radius:50%;
+
+    background:#555;
+
+    transition:.4s;
+}
+
+.dot.active{
+
+    width:20px;
+
+    border-radius:20px;
+
+    background:#ff3cac;
+}
+
+
+/* =========================
+       قبل از اسکن
+========================= */
+
+.pre-scan-text{
+
+    margin-top:30px;
+
+    font-size:18px;
+
+    line-height:2.3;
+
+    color:#e7e7f2;
+}
+
+.highlight{
+
+    color:#ff72bd;
+
+    text-shadow:
+        0 0 18px
+        rgba(255,60,172,.5);
+}
+
+.camera-note{
+
+    margin-top:15px;
+
+    color:#858398;
+
+    font-size:11px;
+
+    line-height:1.9;
+}
+
+
+/* =========================
+          اسکنر
+========================= */
+
+.scanner{
+
+    margin:25px auto;
+
+    width:min(340px,90vw);
+
+    height:390px;
+
+    position:relative;
+
+    border-radius:28px;
+
+    overflow:hidden;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(255,60,172,.13),
+            rgba(5,5,15,.97) 65%
+        );
+
+    border:
+        1px solid
+        rgba(255,90,190,.25);
+
+    box-shadow:
+
+        0 0 60px
+        rgba(255,60,172,.12),
+
+        inset 0 0 50px
+        rgba(100,80,255,.08);
+
+    transition:box-shadow .2s;
+}
+
+.scanner::before,
+.scanner::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:42px;
+    height:42px;
+
+    border-color:#ff4db8;
+
+    border-style:solid;
+
+    opacity:.85;
+
+    z-index:10;
+}
+
+.scanner::before{
+
+    top:18px;
+    left:18px;
+
+    border-width:
+        2px 0 0 2px;
+}
+
+.scanner::after{
+
+    bottom:18px;
+    right:18px;
+
+    border-width:
+        0 2px 2px 0;
+}
+
+
+/* =========================
+           صورت
+========================= */
+
+.face{
+
+    position:absolute;
+
+    width:170px;
+    height:220px;
+
+    left:50%;
+    top:45%;
+
+    transform:
+        translate(-50%,-50%);
+
+    border-radius:
+        48%
+        48%
+        45%
+        45%;
+
+    border:
+        1px solid
+        rgba(255,255,255,.28);
+
+    box-shadow:
+        0 0 35px
+        rgba(255,60,172,.18);
+
+    opacity:.75;
+}
+
+.face::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:12px;
+    height:12px;
+
+    border-radius:50%;
+
+    background:#ff5ab9;
+
+    left:47px;
+    top:88px;
+
+    box-shadow:
+        64px 0 0 #ff5ab9,
+        32px 55px 0
+        rgba(255,90,185,.7);
+}
+
+
+/* =========================
+         خط اسکن
+========================= */
+
+.scan-line{
+
+    position:absolute;
+
+    left:10%;
+
+    width:80%;
+
+    height:2px;
+
+    top:25%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #ff3cac,
+            #fff,
+            #ff3cac,
+            transparent
+        );
+
+    box-shadow:
+        0 0 15px #ff3cac,
+        0 0 30px #ff3cac;
+
+    animation:
+        scanning 3.4s
+        ease-in-out
+        infinite;
+
+    z-index:20;
+}
+
+
+/* =========================
+          حلقه‌ها
+========================= */
+
+.scan-ring{
+
+    position:absolute;
+
+    width:250px;
+    height:250px;
+
+    left:50%;
+    top:45%;
+
+    transform:
+        translate(-50%,-50%);
+
+    border:
+        1px dashed
+        rgba(255,80,180,.25);
+
+    border-radius:50%;
+
+    animation:
+        rotateScan 8s
+        linear
+        infinite;
+}
+
+.scan-ring::before,
+.scan-ring::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:20px;
+
+    border:
+        1px solid
+        rgba(100,150,255,.13);
+
+    border-radius:50%;
+}
+
+.scan-ring::after{
+    inset:45px;
+}
+
+
+/* =========================
+           نقاط
+========================= */
+
+.scan-dot{
+
+    position:absolute;
+
+    width:5px;
+    height:5px;
+
+    border-radius:50%;
+
+    background:#ff6abd;
+
+    box-shadow:
+        0 0 12px
+        #ff3cac;
+
+    animation:
+        blink 1.2s
+        infinite
+        alternate;
+}
+
+
+/* =========================
+        متن اسکن
+========================= */
+
+.scan-status{
+
+    position:absolute;
+
+    bottom:28px;
+
+    left:0;
+    right:0;
+
+    text-align:center;
+
+    font-size:11px;
+
+    color:#d9cfe0;
+
+    z-index:10;
+
+    transition:
+        opacity .5s ease;
+}
+
+.percent{
+
+    position:absolute;
+
+    top:20px;
+    right:25px;
+
+    font-family:monospace;
+
+    font-size:13px;
+
+    color:#ff78c4;
+
+    z-index:10;
+}
+
+
+/* =========================
+          انفجار
+========================= */
+
+.explosion-flash{
+
+    position:fixed;
+
+    inset:0;
+
+    background:white;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    z-index:200;
+}
+
+.explosion-flash.active{
+
+    animation:
+        flashExplosion
+        .65s
+        ease-out;
+}
+
+.shockwave{
+
+    position:fixed;
+
+    left:50%;
+    top:50%;
+
+    width:25px;
+    height:25px;
+
+    border:
+        3px solid
+        #ff4db8;
+
+    border-radius:50%;
+
+    transform:
+        translate(-50%,-50%)
+        scale(0);
+
+    pointer-events:none;
+
+    z-index:150;
+}
+
+.shockwave.active{
+
+    animation:
+        shockwave
+        1s
+        ease-out;
+}
+
+.scanner.exploding{
+
+    animation:
+        scannerShake
+        .06s
+        infinite;
+
+    box-shadow:
+
+        0 0 60px
+        #ff3cac,
+
+        0 0 120px
+        rgba(255,60,172,.8),
+
+        inset 0 0 100px
+        rgba(255,255,255,.5);
+}
+
+
+/* =========================
+         صفحه خرابی
+========================= */
+
+.error-icon{
+
+    font-size:70px;
+
+    animation:
+        errorPulse
+        .7s
+        infinite
+        alternate;
+}
+
+.error-title{
+
+    margin-top:20px;
+
+    font-size:26px;
+
+    color:#ff72bd;
+}
+
+.error-text{
+
+    margin-top:18px;
+
+    font-size:17px;
+
+    line-height:2.2;
+
+    color:#e7e7f2;
+}
+
+.error-text strong{
+
+    color:white;
+
+    text-shadow:
+        0 0 15px
+        rgba(255,60,172,.5);
+}
+
+.error-small{
+
+    margin-top:15px;
+
+    color:#858398;
+
+    font-size:11px;
+}
+
+
+/* =========================
+          سوال
+========================= */
+
+.question{
+
+    margin-top:25px;
+
+    font-size:20px;
+
+    line-height:2.1;
+}
+
+.question strong{
+
+    color:white;
+
+    text-shadow:
+        0 0 15px
+        rgba(255,60,172,.2);
+}
+
+.evidence{
+
+    margin-top:10px;
+
+    color:#aaaabe;
+
+    font-size:13px;
+
+    line-height:1.8;
+}
+
+.buttons{
+
+    position:relative;
+
+    height:145px;
+
+    margin-top:25px;
+}
+
+.answer-btn{
+
+    position:absolute;
+
+    padding:
+        12px 27px;
+
+    border-radius:100px;
+
+    font-size:14px;
+
+    transition:
+        left .25s ease,
+        top .25s ease,
+        transform .2s ease;
+}
+
+.yes{
+
+    right:55%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff3cac,
+            #ff6cae
+        );
+
+    color:white;
+
+    box-shadow:
+        0 0 25px
+        rgba(255,60,172,.25);
+}
+
+.no{
+
+    left:55%;
+
+    background:#171722;
+
+    color:#eee;
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+}
+
+
+/* =========================
+           نتیجه
+========================= */
+
+.result-icon{
+
+    font-size:60px;
+
+    animation:
+        pulse
+        1.5s
+        infinite;
+}
+
+.result-title{
+
+    font-size:27px;
+
+    margin:
+        20px 0 10px;
+}
+
+.result-text{
+
+    line-height:2;
+
+    color:#d7d7e8;
+
+    font-size:15px;
+}
+
+
+/* =========================
+         انیمیشن‌ها
+========================= */
+
+@keyframes appear{
+
+    from{
+
+        opacity:0;
+
+        transform:
+            translateY(18px);
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+@keyframes scanning{
+
+    0%{
+        top:22%;
+    }
+
+    50%{
+        top:72%;
+    }
+
+    100%{
+        top:22%;
+    }
+}
+
+@keyframes rotateScan{
+
+    from{
+
+        transform:
+            translate(-50%,-50%)
+            rotate(0deg);
+    }
+
+    to{
+
+        transform:
+            translate(-50%,-50%)
+            rotate(360deg);
+    }
+}
+
+@keyframes blink{
+
+    from{
+
+        opacity:.2;
+
+        transform:
+            scale(.7);
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+            scale(1.5);
+    }
+}
+
+@keyframes pulse{
+
+    0%,100%{
+        transform:scale(1);
+    }
+
+    50%{
+        transform:scale(1.12);
+    }
+}
+
+@keyframes scannerShake{
+
+    0%{
+        transform:translate(0);
+    }
+
+    25%{
+        transform:
+            translate(5px,-3px);
+    }
+
+    50%{
+        transform:
+            translate(-5px,4px);
+    }
+
+    75%{
+        transform:
+            translate(4px,4px);
+    }
+
+    100%{
+        transform:
+            translate(-4px,-3px);
+    }
+}
+
+@keyframes flashExplosion{
+
+    0%{
+        opacity:0;
+    }
+
+    12%{
+        opacity:.95;
+    }
+
+    30%{
+        opacity:.2;
+    }
+
+    100%{
+        opacity:0;
+    }
+}
+
+@keyframes shockwave{
+
+    0%{
+
+        transform:
+            translate(-50%,-50%)
+            scale(0);
+
+        opacity:1;
+    }
+
+    100%{
+
+        transform:
+            translate(-50%,-50%)
+            scale(18);
+
+        opacity:0;
+    }
+}
+
+@keyframes errorPulse{
+
+    from{
+        transform:scale(1);
+    }
+
+    to{
+        transform:scale(1.12);
+    }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<canvas id="particles"></canvas>
+
+
+<div
+    class="explosion-flash"
+    id="explosionFlash"
+></div>
+
+
+<div
+    class="shockwave"
+    id="shockwave"
+></div>
+
+
+<div class="page">
+
+
+<!-- =========================
+          شروع
+========================= -->
+
+<section
+    class="screen"
+    id="startScreen"
+>
+
+    <div class="small">
+        ✦ یک آزمایش کوچک
+    </div>
+
+    <h1>
+        یه چیزی برای شما...
+    </h1>
+
+    <div class="subtitle">
+
+        فقط چند ثانیه وقتتون رو می‌گیره 😌
+
+        <br>
+
+        ولی نتیجه‌ش جالبه...
+
+    </div>
+
+    <button
+        class="start-btn"
+        onclick="startExperience()"
+    >
+        شروع کنیم؟ ✦
+    </button>
+
+</section>
+
+
+<!-- =========================
+          گالری
+========================= -->
+
+<section
+    class="screen hidden"
+    id="galleryScreen"
+>
+
+    <div class="small">
+        مرحله اول
+    </div>
+
+    <h1>
+        خب بیاید یکم چیزای جذاب ببینیم ✨
+    </h1>
+
+    <div class="gallery-intro">
+        قبول دارید اینا جذابن دیگه؟ 👀
+    </div>
+
+
+    <div class="gallery">
+
+
+        <!-- 🌸 طبیعت -->
+
+        <img
+            class="active"
+            src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1200&q=85"
+            alt="زیبایی طبیعت و گل‌ها"
+        >
+
+
+        <!-- 🌌 آسمان -->
+
+        <img
+            src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=85"
+            alt="آسمان پرستاره"
+        >
+
+
+        <!-- 🍽️ غذا -->
+
+        <img
+            src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1200&q=85"
+            alt="غذای جذاب"
+        >
+
+
+        <!-- 🌊 آرامش -->
+
+        <img
+            src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=85"
+            alt="دریا و آرامش"
+        >
+
+
+        <!-- 🏔️ شگفتی -->
+
+        <img
+            src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=85"
+            alt="کوهستان"
+        >
+
+
+        <!-- 🌃 تکنولوژی -->
+
+        <img
+            src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1200&q=85"
+            alt="شهر مدرن و تکنولوژی"
+        >
+
+
+        <div class="image-overlay"></div>
+
+
+        <div
+            class="gallery-text"
+            id="galleryText"
+        >
+            بعضی چیزا واقعاً جذابن... ✨
+        </div>
+
+    </div>
+
+
+    <div
+        class="dots"
+        id="dots"
+    >
+
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+        قبل اسکن
+========================= -->
+
+<section
+    class="screen hidden"
+    id="preScanScreen"
+>
+
+    <div class="small">
+        مرحله دوم
+    </div>
+
+    <h1>
+        خب... حالا نوبت شماست 👀
+    </h1>
+
+
+    <div class="pre-scan-text">
+
+        ولی شما حتی از اینا هم جذاب‌ترید!
+
+        <br>
+
+        <strong class="highlight">
+            باور ندارید؟
+        </strong>
+
+        <br><br>
+
+        پس بیاید یه اسکن کوتاه انجام بدیم...
+
+    </div>
+
+
+    <button
+        class="scan-start-btn"
+        onclick="startScanner()"
+    >
+        بزن بریم ✦
+    </button>
+
+
+    <div class="camera-note">
+
+        نگران دوربین گوشی نباشید 😌
+
+        <br>
+
+        این اسکن هیچ کاری با دوربین نداره؛
+        کاملاً شبیه‌سازی شده‌ست 😂
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+          اسکن
+========================= -->
+
+<section
+    class="screen hidden"
+    id="scannerScreen"
+>
+
+    <div class="small">
+        در حال بررسی
+    </div>
+
+    <h1>
+        اجازه بدید بررسی کنم... 👀
+    </h1>
+
+
+    <div
+        class="scanner"
+        id="scanner"
+    >
+
+        <div class="scan-ring"></div>
+
+        <div class="face"></div>
+
+        <div class="scan-line"></div>
+
+
+        <div
+            class="scan-dot"
+            style="
+                top:32%;
+                left:28%;
+            "
+        ></div>
+
+
+        <div
+            class="scan-dot"
+            style="
+                top:48%;
+                left:67%;
+                animation-delay:.3s;
+            "
+        ></div>
+
+
+        <div
+            class="scan-dot"
+            style="
+                top:64%;
+                left:37%;
+                animation-delay:.7s;
+            "
+        ></div>
+
+
+        <div
+            class="scan-dot"
+            style="
+                top:72%;
+                left:61%;
+                animation-delay:1s;
+            "
+        ></div>
+
+
+        <div
+            class="percent"
+            id="percent"
+        >
+            0%
+        </div>
+
+
+        <div
+            class="scan-status"
+            id="scanItems"
+        >
+            در حال آماده‌سازی اسکن...
+        </div>
+
+    </div>
+
+
+    <div class="camera-note">
+
+        اسکن شبیه‌سازی شده • دوربین لازم نیست
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+          خرابی
+========================= -->
+
+<section
+    class="screen hidden"
+    id="errorScreen"
+>
+
+    <div class="error-icon">
+        💥
+    </div>
+
+
+    <div class="error-title">
+        اسکن با موفقیت خراب شد! 😂
+    </div>
+
+
+    <div class="error-text">
+
+        <strong>
+            بفرمااا! حتی اسکن هم از جذابیتتون خراب شد! 😭😂
+        </strong>
+
+        <br><br>
+
+        بعد میگید چشمای من مشکل داره؟؟؟!!!!
+
+    </div>
+
+
+    <div class="error-small">
+        خطای سیستمی: جذابیت بیش از ظرفیت دستگاه
+    </div>
+
+</section>
+
+
+<!-- =========================
+          سوال
+========================= -->
+
+<section
+    class="screen hidden"
+    id="questionScreen"
+>
+
+    <div class="small">
+        نتیجه آزمایش
+    </div>
+
+
+    <div class="question">
+
+        با همه‌ی این شواهد...
+
+        <br>
+
+        <strong>
+            هنوزم می‌خواید انکار کنید
+            که جذابید؟
+        </strong>
+
+    </div>
+
+
+    <div class="evidence">
+
+        لطفاً با دقت پاسخ دهید.
+
+        <br>
+
+        هیئت داوران کاملاً جدی است. 😂
+
+    </div>
+
+
+    <div class="buttons">
+
+
+        <button
+            class="answer-btn yes"
+            id="yesBtn"
+        >
+            آره 😌
+        </button>
+
+
+        <button
+            class="answer-btn no"
+            id="noBtn"
+            onclick="acceptNo()"
+        >
+            نه... 😂
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+          نتیجه
+========================= -->
+
+<section
+    class="screen hidden"
+    id="resultScreen"
+>
+
+    <div class="result-icon">
+        ✨
+    </div>
+
+
+    <div class="result-title">
+        نتیجه مشخص شد.
+    </div>
+
+
+    <div class="result-text">
+
+        جذابیت شما با موفقیت تأیید شد. ✅
+
+        <br><br>
+
+        اعتراض شما هم متأسفانه
+        توسط هیئت داوران رد شد. 😂
+
+        <br><br>
+
+        <strong>
+            تقدیم بهتون، سرکار خانوم :)
+        </strong>
+
+    </div>
+
+</section>
+
+
+</div>
+
+
+<script>
+
+
+/* =========================
+      سیستم صفحات
+========================= */
+
+function showScreen(id){
+
+    document
+        .querySelectorAll(".screen")
+        .forEach(screen => {
+
+            screen.classList.add(
+                "hidden"
+            );
+
+        });
+
+
+    document
+        .getElementById(id)
+        .classList
+        .remove("hidden");
+}
+
+
+/* =========================
+           شروع
+========================= */
+
+function startExperience(){
+
+    showScreen(
+        "galleryScreen"
+    );
+
+    startGallery();
+}
+
+
+/* =========================
+          گالری
+========================= */
+
+const images =
+    document.querySelectorAll(
+        ".gallery img"
+    );
+
+const dots =
+    document.querySelectorAll(
+        ".dot"
+    );
+
+const galleryText =
+    document.getElementById(
+        "galleryText"
+    );
+
+
+const texts = [
+
+    "🌸 زیبایی طبیعت همیشه یه چیز دیگه‌ست...",
+
+    "🌌 بعضی آسمونا آدمو مجبور می‌کنن چند لحظه فقط نگاه کنه.",
+
+    "🍽️ اینم از اون چیزاست که آدم فقط با نگاه کردن گرسنه می‌شه 😂",
+
+    "🌊 بعضی منظره‌ها فقط برای آروم کردن آدم ساخته شدن.",
+
+    "🏔️ بعضی چیزا هم واقعاً آدمو شگفت‌زده می‌کنن...",
+
+    "🌃 و این یکی هم که آینده رو گذاشته جلوی چشممون."
+
+];
+
+
+let currentImage = 0;
+
+
+function startGallery(){
+
+    const interval =
+        setInterval(() => {
+
+            currentImage++;
+
+
+            if(
+                currentImage >=
+                images.length
+            ){
+
+                clearInterval(
+                    interval
+                );
+
+
+                setTimeout(() => {
+
+                    showScreen(
+                        "preScanScreen"
+                    );
+
+                },900);
+
+
+                return;
+            }
+
+
+            images.forEach(
+                image => {
+
+                    image.classList
+                        .remove("active");
+
+                }
+            );
+
+
+            dots.forEach(
+                dot => {
+
+                    dot.classList
+                        .remove("active");
+
+                }
+            );
+
+
+            images[
+                currentImage
+            ]
+            .classList
+            .add("active");
+
+
+            dots[
+                currentImage
+            ]
+            .classList
+            .add("active");
+
+
+            galleryText.style.opacity =
+                0;
+
+
+            setTimeout(() => {
+
+                galleryText.textContent =
+                    texts[
+                        currentImage
+                    ];
+
+                galleryText.style.opacity =
+                    1;
+
+            },400);
+
+
+        },2500);
+
+}
+
+
+/* =========================
+           اسکن
+========================= */
+
+let scannerStarted = false;
+
+
+function startScanner(){
+
+    if(scannerStarted){
+        return;
+    }
+
+
+    scannerStarted = true;
+
+
+    showScreen(
+        "scannerScreen"
+    );
+
+
+    let value = 0;
+
+
+    const percent =
+        document.getElementById(
+            "percent"
+        );
+
+
+    const status =
+        document.getElementById(
+            "scanItems"
+        );
+
+
+    const messages = [
+
+        "در حال آماده‌سازی اسکن...",
+
+        "ساختار چهره شناسایی شد...",
+
+        "در حال بررسی ویژگی‌ها...",
+
+        "در حال تحلیل حالت چهره...",
+
+        "در حال بررسی کاریزما...",
+
+        "در حال محاسبه میزان جذابیت...",
+
+        "نتایج تقریباً آماده است...",
+
+        "⚠ هشدار: میزان جذابیت غیرعادی است!",
+
+        "در حال نهایی‌سازی نتیجه..."
+
+    ];
+
+
+    let lastMessage = -1;
+
+
+    /*
+       افزایش آرام و کنترل‌شده
+       اما انفجار قبل از 100٪
+    */
+
+    const timer =
+        setInterval(() => {
+
+
+            value +=
+                0.85 +
+                Math.random() * 0.35;
+
+
+            /*
+               اینجا عمداً 99 است.
+               بنابراین هیچ‌وقت 100 نمایش داده نمی‌شود.
+            */
+
+            if(
+                value >= 99
+            ){
+
+                value = 99;
+
+
+                percent.textContent =
+                    "99%";
+
+
+                clearInterval(
+                    timer
+                );
+
+
+                status.style.opacity =
+                    "0";
+
+
+                setTimeout(() => {
+
+                    status.textContent =
+                        "⚠️ خطای غیرمنتظره در اسکن...";
+
+
+                    status.style.opacity =
+                        "1";
+
+
+                    setTimeout(() => {
+
+                        triggerExplosion();
+
+                    },700);
+
+
+                },400);
+
+
+                return;
+            }
+
+
+            percent.textContent =
+                Math.floor(value) +
+                "%";
+
+
+            const index =
+                Math.min(
+
+                    messages.length - 1,
+
+                    Math.floor(
+                        value /
+                        (
+                            100 /
+                            messages.length
+                        )
+                    )
+
+                );
+
+
+            if(
+                index !== lastMessage
+            ){
+
+                lastMessage =
+                    index;
+
+
+                status.style.opacity =
+                    "0";
+
+
+                setTimeout(() => {
+
+                    status.textContent =
+                        messages[index];
+
+
+                    status.style.opacity =
+                        "1";
+
+                },450);
+
+            }
+
+
+        },100);
+
+}
+
+
+/* =========================
+          انفجار
+========================= */
+
+function triggerExplosion(){
+
+    const scanner =
+        document.getElementById(
+            "scanner"
+        );
+
+
+    const flash =
+        document.getElementById(
+            "explosionFlash"
+        );
+
+
+    const shockwave =
+        document.getElementById(
+            "shockwave"
+        );
+
+
+    scanner.classList.add(
+        "exploding"
+    );
+
+
+    flash.classList.remove(
+        "active"
+    );
+
+    void flash.offsetWidth;
+
+    flash.classList.add(
+        "active"
+    );
+
+
+    shockwave.classList.remove(
+        "active"
+    );
+
+    void shockwave.offsetWidth;
+
+    shockwave.classList.add(
+        "active"
+    );
+
+
+    burst(
+        window.innerWidth / 2,
+        window.innerHeight / 2
+    );
+
+
+    setTimeout(() => {
+
+        burst(
+            window.innerWidth / 2,
+            window.innerHeight / 2
+        );
+
+    },120);
+
+
+    setTimeout(() => {
+
+        burst(
+            window.innerWidth / 2,
+            window.innerHeight / 2
+        );
+
+    },240);
+
+
+    setTimeout(() => {
+
+        scanner.classList.remove(
+            "exploding"
+        );
+
+    },700);
+
+
+    setTimeout(() => {
+
+        showScreen(
+            "errorScreen"
+        );
+
+
+        setTimeout(() => {
+
+            showQuestion();
+
+        },4200);
+
+
+    },1200);
+
+}
+
+
+/* =========================
+          سوال
+========================= */
+
+function showQuestion(){
+
+    showScreen(
+        "questionScreen"
+    );
+
+    activateRunawayButton();
+}
+
+
+/* =========================
+       دکمه فراری
+========================= */
+
+function activateRunawayButton(){
+
+    const yesBtn =
+        document.getElementById(
+            "yesBtn"
+        );
+
+
+    let escapes = 0;
+
+
+    function moveButton(){
+
+        escapes++;
+
+
+        const container =
+            document.querySelector(
+                ".buttons"
+            );
+
+
+        const maxX =
+            container.offsetWidth -
+            yesBtn.offsetWidth;
+
+
+        const maxY =
+            container.offsetHeight -
+            yesBtn.offsetHeight;
+
+
+        const x =
+            Math.random() *
+            Math.max(
+                0,
+                maxX
+            );
+
+
+        const y =
+            Math.random() *
+            Math.max(
+                0,
+                maxY
+            );
+
+
+        yesBtn.style.right =
+            "auto";
+
+
+        yesBtn.style.left =
+            x + "px";
+
+
+        yesBtn.style.top =
+            y + "px";
+
+
+        if(
+            escapes >= 4
+        ){
+
+            yesBtn.style.transform =
+                "scale(.85)";
+        }
+
+
+        if(
+            escapes >= 7
+        ){
+
+            yesBtn.textContent =
+                "بازم آره؟ 😭";
+        }
+
+
+        if(
+            escapes >= 10
+        ){
+
+            yesBtn.textContent =
+                "نه دیگه 😂";
+        }
+
+    }
+
+
+    yesBtn.addEventListener(
+        "mouseenter",
+        moveButton
+    );
+
+
+    yesBtn.addEventListener(
+        "touchstart",
+        event => {
+
+            event.preventDefault();
+
+            moveButton();
+
+        }
+    );
+
+
+    yesBtn.addEventListener(
+        "click",
+        event => {
+
+            event.preventDefault();
+
+            moveButton();
+
+        }
+    );
+
+}
+
+
+/* =========================
+            نه
+========================= */
+
+function acceptNo(){
+
+    showScreen(
+        "resultScreen"
+    );
+
+
+    burst(
+        window.innerWidth / 2,
+        window.innerHeight / 2
+    );
+
+}
+
+
+/* =========================
+          ذرات
+========================= */
+
+const particleCanvas =
+    document.getElementById(
+        "particles"
+    );
+
+
+const pctx =
+    particleCanvas.getContext(
+        "2d"
+    );
+
+
+let pw;
+let ph;
+
+
+function resizeParticles(){
+
+    pw =
+        window.innerWidth;
+
+    ph =
+        window.innerHeight;
+
+
+    const dpr =
+        Math.min(
+            window.devicePixelRatio || 1,
+            2
+        );
+
+
+    particleCanvas.width =
+        pw * dpr;
+
+
+    particleCanvas.height =
+        ph * dpr;
+
+
+    particleCanvas.style.width =
+        pw + "px";
+
+
+    particleCanvas.style.height =
+        ph + "px";
+
+
+    pctx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+    );
+
+}
+
+
+resizeParticles();
+
+
+window.addEventListener(
+    "resize",
+    resizeParticles
+);
+
+
+let particles = [];
+
+
+function burst(x,y){
+
+    for(
+        let i=0;
+        i<230;
+        i++
+    ){
+
+        const angle =
+            Math.random() *
+            Math.PI *
+            2;
+
+
+        const speed =
+            2.5 +
+            Math.random() * 10;
+
+
+        particles.push({
+
+            x:x,
+
+            y:y,
+
+            vx:
+                Math.cos(angle) *
+                speed,
+
+            vy:
+                Math.sin(angle) *
+                speed,
+
+            life:
+                .8 +
+                Math.random() * .9,
+
+            size:
+                1 +
+                Math.random() * 4,
+
+            gravity:
+                .025 +
+                Math.random() * .045
+
+        });
+
+    }
+
+}
+
+
+function animateParticles(){
+
+    pctx.clearRect(
+        0,
+        0,
+        pw,
+        ph
+    );
+
+
+    for(
+        let i =
+            particles.length - 1;
+
+        i >= 0;
+
+        i--
+    ){
+
+        const p =
+            particles[i];
+
+
+        p.x +=
+            p.vx;
+
+
+        p.y +=
+            p.vy;
+
+
+        p.vy +=
+            p.gravity;
+
+
+        p.vx *= .985;
+
+        p.vy *= .985;
+
+
+        p.life -= .012;
+
+
+        pctx.globalAlpha =
+            Math.max(
+                0,
+                p.life
+            );
+
+
+        pctx.fillStyle =
+            "#ff4db8";
+
+
+        pctx.shadowColor =
+            "#ff3cac";
+
+
+        pctx.shadowBlur =
+            14;
+
+
+        pctx.beginPath();
+
+
+        pctx.arc(
+            p.x,
+            p.y,
+            p.size,
+            0,
+            Math.PI * 2
+        );
+
+
+        pctx.fill();
+
+
+        if(
+            p.life <= 0
+        ){
+
+            particles.splice(
+                i,
+                1
+            );
+
+        }
+
+    }
+
+
+    pctx.globalAlpha =
+        1;
+
+    pctx.shadowBlur =
+        0;
+
+
+    requestAnimationFrame(
+        animateParticles
+    );
+
+}
+
+
+animateParticles();
+
+</script>
+
+</body>
+
+</html>
